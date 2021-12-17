@@ -17,3 +17,5 @@ class User(BaseModel):
     faculty: str
     program: tp.Optional[str]
     group: tp.Optional[str] = None
+    points: int = 0
+    coins: int = 0
