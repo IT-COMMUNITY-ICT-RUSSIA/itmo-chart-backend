@@ -17,6 +17,7 @@ loguru = "^0.5.3"
 [tool.poetry.dev-dependencies]
 mypy = "^0.920"
 black = "^21.12b0"
+Faker = "^10.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
