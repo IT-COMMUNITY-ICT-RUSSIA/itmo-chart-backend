@@ -7,8 +7,3 @@ services:
       - .env
     ports:
       - "5002:8000"
-    volumes:
-      - "./output:/output"
-      - "/dev/usb:/dev/usb"
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
