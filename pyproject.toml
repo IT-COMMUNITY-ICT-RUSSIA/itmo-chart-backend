@@ -9,6 +9,7 @@ license = "Apache 2"
 python = "^3.9"
 fastapi = "^0.70.1"
 motor = "^2.5.1"
+uvicorn = "^0.16.0"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.920"
