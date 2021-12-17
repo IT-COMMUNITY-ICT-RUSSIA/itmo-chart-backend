@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "itmo-chart-backend"
+version = "0.1.0"
+description = "ITMO.Chart Backend From ICTHACK 3"
+authors = ["Your Name <you@example.com>"]
+license = "Apache 2"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.70.1"
+motor = "^2.5.1"
+
+[tool.poetry.dev-dependencies]
+mypy = "^0.920"
+black = "^21.12b0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
