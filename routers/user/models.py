@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 class User(BaseModel):
     """Simple user descriptor"""
+
     name: str
     birth_date: datetime
     isu_id: str
