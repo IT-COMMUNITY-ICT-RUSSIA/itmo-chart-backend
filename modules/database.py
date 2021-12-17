@@ -13,7 +13,9 @@ class MongoDbWrapper(metaclass=SingletonMeta):
 
     def __init__(self) -> None:
         """connect to database using credentials"""
-        mongo_client_url: str = str(os.getenv("MONGO_CONNECTION_URL")) + "&ssl=true&tlsAllowInvalidCertificates=true"
+        mongo_client_url: str = (
+            str(os.getenv("MONGO_CONNECTION_URL")) + "&ssl=true&tlsAllowInvalidCertificates=true"
+        )
 
         print(mongo_client_url)
 
@@ -55,11 +57,15 @@ class MongoDbWrapper(metaclass=SingletonMeta):
         count: int = await collection_.count_documents({})
         return count
 
-    async def _add_document_to_collection(self, collection_: AsyncIOMotorCollection, item_: BaseModel) -> None:
+    async def _add_document_to_collection(
+        self, collection_: AsyncIOMotorCollection, item_: BaseModel
+    ) -> None:
         """Push document to given MongoDB collection"""
         await collection_.insert_one(item_.dict())
 
-    async def _remove_document_from_collection(self, collection_: AsyncIOMotorCollection, key: str, value: str) -> None:
+    async def _remove_document_from_collection(
+        self, collection_: AsyncIOMotorCollection, key: str, value: str
+    ) -> None:
         """Remove document from collection by {key:value}"""
         await collection_.find_one_and_delete({key: value})
 
@@ -72,6 +78,8 @@ class MongoDbWrapper(metaclass=SingletonMeta):
         exclude: tp.Optional[tp.Set[str]] = None,
     ) -> None:
         if exclude:
-            await collection_.find_one_and_update({key: value}, {"$set": new_data.dict(exclude=exclude)})
+            await collection_.find_one_and_update(
+                {key: value}, {"$set": new_data.dict(exclude=exclude)}
+            )
         else:
             await collection_.find_one_and_update({key: value}, {"$set": new_data.dict()})
