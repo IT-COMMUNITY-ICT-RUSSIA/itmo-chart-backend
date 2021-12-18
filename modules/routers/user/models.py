@@ -3,6 +3,9 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
+from modules.models import GenericResponse
+from modules.routers.service.models import AchievementEvent
+
 
 class User(BaseModel):
     """Simple user descriptor"""
@@ -19,3 +22,15 @@ class User(BaseModel):
     group: tp.Optional[str] = None
     points: int = 0
     coins: int = 0
+
+
+class UserOut(GenericResponse):
+    user: User
+
+
+class UsersOut(GenericResponse):
+    users: tp.List[User]
+
+
+class AchievementsOut(GenericResponse):
+    achievements: tp.List[AchievementEvent]

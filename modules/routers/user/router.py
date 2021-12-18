@@ -1,25 +1,32 @@
-from loguru import logger
+from datetime import timedelta
+
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
+from loguru import logger
+
 from modules.database import MongoDbWrapper
 
-from modules.models import Token
-from modules.routers.user.models import User, UserOut, UsersOut
-
+from ...exceptions import AuthException
+from ...models import GenericResponse, Token
+from ...routers.user.models import AchievementsOut, User, UserOut, UsersOut
 from ...security import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     authenticate_user,
     create_access_token,
     get_current_user,
 )
-from ...exceptions import AuthException
-from datetime import timedelta
+
+user_router = APIRouter(prefix="/user", tags=["user"], default_response_class=GenericResponse)
 
 
+<<<<<<< HEAD
 user_router = APIRouter(prefix="/user")
 
 
 @user_router.post("/login")
+=======
+@user_router.post("/login", response_model=Token)
+>>>>>>> f89bb95 (:zap: user router fixed)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()) -> Token:
     """
     log the user in provided the username
@@ -36,19 +43,21 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()) -> Token:
     return Token(access_token=access_token, token_type="bearer")
 
 
-@user_router.get("/me")
+@user_router.get("/me", response_model=UserOut)
 async def get_user_data(user: User = Depends(get_current_user)) -> UserOut:
     """return data for the requested user"""
-    return user
+    return UserOut(user=user)
 
 
-@user_router.get("/users")
+@user_router.get("/users", response_model=UsersOut)
 async def get_all_users(user: User = Depends(get_current_user)) -> UsersOut:
     """get all known users"""
-    return await MongoDbWrapper().get_all_users()
+    users = await MongoDbWrapper().get_all_users()
+    return UsersOut(users=users)
 
 
-@user_router.get("/achievements")
-async def get_user_achievements(user: User = Depends(get_current_user)):
+@user_router.get("/achievements", response_model=AchievementsOut)
+async def get_user_achievements(user: User = Depends(get_current_user)) -> AchievementsOut:
     """return achievement data for the requested user"""
-    return await MongoDbWrapper().get_all_recieved_achievements_for_user(user=user)
+    achievements = await MongoDbWrapper().get_all_recieved_achievements_for_user(user=user)
+    return AchievementsOut(achievements=achievements)

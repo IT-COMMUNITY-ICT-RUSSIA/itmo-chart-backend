@@ -43,7 +43,7 @@ async def authenticate_user(username: str, password: str) -> tp.Optional[UserWit
     user_data = await MongoDbWrapper().get_concrete_user(username)
     if not user_data:
         return None
-    if not verify_password(password, user_data.hashed_password):
+    if not verify_password(password, user_data.password_hashed):
         return None
     return user_data
 
