@@ -59,9 +59,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
         token_data = TokenData(username=username)
     except JWTError:
         raise CredentialsValidationException
-    user: tp.Optional[UserWithPassword] = await MongoDbWrapper().get_concrete_user(
-        username=token_data.username
-    )
+    user: tp.Optional[UserWithPassword] = await MongoDbWrapper().get_concrete_user(username=token_data.username)
     if user is None:
         raise CredentialsValidationException
     logger.info(f"user: {dict(user)}")

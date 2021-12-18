@@ -14,7 +14,12 @@ class MongoDbWrapper(metaclass=SingletonMeta):
 
     def __init__(self) -> None:
         """connect to database using credentials"""
-        mongo_client_url: str = str(os.getenv("MONGO_CONNECTION_URL")) + "&ssl=true&tlsAllowInvalidCertificates=true"
+        mongo_connection_url: tp.Optional[str] = os.getenv("MONGO_CONNECTION_URL", None)
+
+        if mongo_connection_url is None:
+            raise ValueError("MONGO_CONNECTION_URL environment variable not found")
+
+        mongo_client_url: str = str(mongo_connection_url) + "&ssl=true&tlsAllowInvalidCertificates=true"
 
         if mongo_client_url is None:
             message = "Cannot establish database connection: $MONGO_CONNECTION_URL environment variable is not set."

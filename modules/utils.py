@@ -87,9 +87,7 @@ def generate_fake_group(context: tp.Optional[tp.Dict[str, str]] = None) -> tp.Li
     return [generate_fake_student(context) for _ in range(15)]
 
 
-def generate_fake_faculty(
-    contexts: tp.Optional[tp.List[tp.Dict[str, str]]] = None
-) -> tp.Dict[str, tp.List[Student]]:
+def generate_fake_faculty(contexts: tp.Optional[tp.List[tp.Dict[str, str]]] = None) -> tp.Dict[str, tp.List[Student]]:
     if not contexts:
         megafaculty: str = random.choice(list(university_structure))
         faculty: str = random.choice(list(university_structure[megafaculty]))

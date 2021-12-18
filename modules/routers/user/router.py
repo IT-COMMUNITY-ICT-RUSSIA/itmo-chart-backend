@@ -1,9 +1,6 @@
 from fastapi import APIRouter, Depends
 
-user_router = APIRouter(
-    prefix="/user",
-    tags=["user"],
-)
+user_router = APIRouter(prefix="/user")
 
 
 @user_router.post("/login")
