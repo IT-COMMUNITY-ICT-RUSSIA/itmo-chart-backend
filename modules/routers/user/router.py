@@ -32,7 +32,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()) -> Token:
         logger.warning(f"Failed to login user {form_data.username}")
         raise AuthException
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
+    access_token = create_access_token(data={"sub": user.isu_id}, expires_delta=access_token_expires)
     return Token(access_token=access_token, token_type="bearer")
 
 

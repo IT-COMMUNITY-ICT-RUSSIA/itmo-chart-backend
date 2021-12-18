@@ -5,6 +5,8 @@ import random
 from faker import Faker
 from faker.providers import DynamicProvider
 
+from modules.routers.user.models import UserWithPassword
+from app import DB
 
 # from .. import routers
 
@@ -68,6 +70,7 @@ def generate_fake_student(context: tp.Optional[tp.Dict[str, str]] = None) -> Stu
         "date_created": gen_datetime(min_year=2017, max_year=2021),
         "permissions": ["read"],
         "is_teacher": False,
+        "hashed_password": "$2b$12$QCa5qJRNt7qh5H.ooiznCebHzFx6obV4Koz0J.nwJ3TLiaZLWL4v6",
         **context,
     }
 
@@ -126,16 +129,19 @@ def generate_fake_megafaculty(
 
 def generate_fake_university() -> tp.Dict[str, tp.Dict]:
     megafacultys: str = list(university_structure)
-    university = [
+    students = []
+    [
         [
             [
-                generate_fake_group(
-                    {
-                        "megafaculty": megafaculty,
-                        "faculty": faculty,
-                        "program": program,
-                        "group": university_structure[megafaculty][faculty][program],
-                    }
+                students.extend(
+                    generate_fake_group(
+                        {
+                            "megafaculty": megafaculty,
+                            "faculty": faculty,
+                            "program": program,
+                            "group": university_structure[megafaculty][faculty][program],
+                        }
+                    )
                 )
                 for program in university_structure[megafaculty][faculty]
             ]
@@ -143,4 +149,4 @@ def generate_fake_university() -> tp.Dict[str, tp.Dict]:
         ]
         for megafaculty in megafacultys
     ]
-    return university
+    return students
