@@ -16,6 +16,7 @@ loguru = "^0.5.3"
 python-dotenv = "^0.19.2"
 dnspython = "^2.1.0"
 python-multipart = "^0.0.5"
+redis = "^4.0.2"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.920"

@@ -39,7 +39,7 @@ class MongoDbWrapper(metaclass=SingletonMeta):
         self._achievements_collection: AsyncIOMotorCollection = self._database["achievements"]
         self._achievement_events_collection: AsyncIOMotorCollection = self._database["achievement-events"]
         self._rewards_collection: AsyncIOMotorCollection = self._database["rewards"]
-        self._reward_events_collection: AsyncIOMotorCollection = self._database["reward_events"]
+        self._reward_events_collection: AsyncIOMotorCollection = self._database["reward-events"]
 
     @staticmethod
     async def _get_element_by_key(
@@ -210,7 +210,7 @@ class MongoDbWrapper(metaclass=SingletonMeta):
 
     async def add_reward_event(self, reward_event: RewardEvent) -> None:
         """upload reward-event to database"""
-        return await self._insert_document(self._rewards_collection, reward_event)
+        return await self._insert_document(self._reward_events_collection, reward_event)
 
     async def get_all_reward_events(self) -> tp.List[RewardEvent]:
         """get all available reward assignment events"""
