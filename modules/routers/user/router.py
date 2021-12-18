@@ -10,7 +10,7 @@ from modules.database import MongoDbWrapper
 
 from ...exceptions import AuthException
 from ...models import GenericResponse, Token
-from ...routers.user.models import AchievementsOut, User, UserOut, UsersOut
+from ...routers.user.models import AchievementsOut, User, UserOut, UsersOut, PurchasesOut
 from ...security import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     authenticate_user,
@@ -56,3 +56,10 @@ async def get_user_achievements(user: User = Depends(get_current_user)) -> Achie
     """return achievement data for the requested user"""
     achievements = await MongoDbWrapper().get_all_recieved_achievements_for_user(user=user)
     return AchievementsOut(achievements=achievements)
+
+
+@user_router.get("/purchase-history", response_model=PurchasesOut)
+async def get_user_achievements(user: User = Depends(get_current_user)) -> PurchasesOut:
+    """return purchase data for the requested user"""
+    rewards = await MongoDbWrapper().get_all_reward_events_for_user(user=user)
+    return PurchasesOut(purchases=rewards)
