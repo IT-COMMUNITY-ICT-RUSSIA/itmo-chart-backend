@@ -8,15 +8,17 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from loguru import logger
 
+from .routers.user.models import UserWithPassword, User
+
 from .database import MongoDbWrapper
 from .exceptions import CredentialsValidationException
-from .models import TokenData, User, UserWithPassword
+from .models import TokenData
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 ALGORITHM = "HS256"
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="user/login")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
@@ -39,11 +41,11 @@ def create_access_token(
     return encoded_jwt
 
 
-async def authenticate_user(username: str, password: str) -> tp.Optional[UserWithPassword]:
-    user_data = await MongoDbWrapper().get_concrete_user(username)
+async def authenticate_user(isu_number: str, password: str) -> tp.Optional[UserWithPassword]:
+    user_data = await MongoDbWrapper().get_user_by_isu_id(isu_number)
     if not user_data:
         return None
-    if not verify_password(password, user_data.password_hashed):
+    if not verify_password(password, user_data.hashed_password):
         return None
     return user_data
 
@@ -59,7 +61,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
         token_data = TokenData(username=username)
     except JWTError:
         raise CredentialsValidationException
-    user: tp.Optional[UserWithPassword] = await MongoDbWrapper().get_concrete_user(username=token_data.username)
+    user: tp.Optional[UserWithPassword] = await MongoDbWrapper().get_user_by_isu_id(token_data.username)
     if user is None:
         raise CredentialsValidationException
     logger.info(f"user: {dict(user)}")

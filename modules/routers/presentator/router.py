@@ -60,10 +60,12 @@ async def get_leaderboard(
 
     except KeyError as e:
         return GenericResponse(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"No matching results found for the provided query. {e}"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No matching results found for the provided query. {e}",
         )
 
     except Exception as e:
         return GenericResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"An internal error occurred: {e}"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An internal error occurred: {e}",
         )

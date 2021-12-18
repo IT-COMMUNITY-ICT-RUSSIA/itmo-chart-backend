@@ -4,8 +4,14 @@ import typing as tp
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection, AsyncIOMotorDatabase
 from pydantic import BaseModel, parse_obj_as
 
-from .routers.service.models import AchievementEvent, AchievementTemplate, Reward, RewardEvent, Subject
-from .routers.user.models import User
+from .routers.service.models import (
+    AchievementEvent,
+    AchievementTemplate,
+    Reward,
+    RewardEvent,
+    Subject,
+)
+from .routers.user.models import User, UserWithPassword
 from .singleton import SingletonMeta
 
 
@@ -100,9 +106,9 @@ class MongoDbWrapper(metaclass=SingletonMeta):
         """upload User to database"""
         return await self._insert_document(self._users_collection, user)
 
-    async def get_user_by_isu_id(self, isu_id: str) -> User:
+    async def get_user_by_isu_id(self, isu_id: str) -> UserWithPassword:
         """get user by its isu number from the DB and return it's model"""
-        return await self._get_element_by_key(self._users_collection, "isu_id", isu_id, User)
+        return await self._get_element_by_key(self._users_collection, "isu_id", isu_id, UserWithPassword)
 
     async def get_all_users(self) -> tp.List[User]:
         """get all available users"""

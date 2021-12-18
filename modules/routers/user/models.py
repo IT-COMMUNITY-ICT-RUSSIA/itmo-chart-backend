@@ -24,6 +24,10 @@ class User(BaseModel):
     coins: int = 0
 
 
+class UserWithPassword(User):
+    hashed_password: str
+
+
 class UserOut(GenericResponse):
     user: User
 
