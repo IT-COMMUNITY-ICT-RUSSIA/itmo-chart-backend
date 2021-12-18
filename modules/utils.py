@@ -150,3 +150,72 @@ def generate_fake_university() -> tp.Dict[str, tp.Dict]:
         for megafaculty in megafacultys
     ]
     return students
+
+
+achievements = [
+    {
+        "name": "Хакатон",
+        "type": "Внеурочная деятельность",
+        "value": 10,
+        "subject_id": "ccc18ededfce4303a0b19f2c88bd6b8c",
+        "timestamp": datetime.now(),
+    },
+    {
+        "name": "Публикация статьи",
+        "type": "Научная деятельность",
+        "value": 15,
+        "subject_id": None,
+        "timestamp": datetime.now(),
+    },
+    {
+        "name": "Стажировка",
+        "type": "Прохождение стажировки",
+        "value": 12,
+        "subject_id": "ccc18ededfce4303a0b19f2c88bd6b8c",
+        "timestamp": datetime.now(),
+    },
+    {
+        "name": "Волонтерство",
+        "type": "Внеурочная деятельность",
+        "value": 5,
+        "subject_id": None,
+        "timestamp": datetime.now(),
+    },
+    {
+        "name": "Участие в программе академической мобильности",
+        "type": "Научная деятельность",
+        "value": 10,
+        "timestamp": datetime.now(),
+        "subject_id": None,
+    },
+    {
+        "name": "Участие в ICPC",
+        "type": "Внеурочная деятельность",
+        "value": 20,
+        "timestamp": datetime.now(),
+        "subject_id": "ccc18ededfce4303a0b19f2c88bd6b8c",
+    },
+]
+
+
+rewards = [
+    {
+        "name": "Чаепитие с Александром Капитоновым",
+        "thumbnail": "https://news.itmo.ru/images/news/big/960500.jpg",
+        "price": 1000,
+        "description": "А еще спросить зачем нам 3 семестра физики.",
+    }
+]
+
+import asyncio
+
+from app import DB
+from modules.routers.service.models import Reward
+
+
+async def a():
+    for _ in rewards:
+        await DB.add_reward(Reward(**_))
+
+
+asyncio.get_event_loop().run_until_complete(a())
