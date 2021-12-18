@@ -3,6 +3,7 @@ from datetime import datetime
 from uuid import uuid4
 
 from pydantic import BaseModel, Field
+from ...models import GenericResponse
 
 
 class Subject(BaseModel):
@@ -19,7 +20,7 @@ class AchievementTemplate(BaseModel):
     name: str
     type: str
     value: int
-    timestamp: datetime
+    timestamp: datetime = Field(default_factory=datetime.now)
     subject_id: tp.Optional[str] = None
     id: str = Field(default_factory=lambda: uuid4().hex)
 
@@ -29,10 +30,10 @@ class AchievementEvent(BaseModel):
 
     user_id: str
     creator_id: str
-    timestamp: datetime
     achievement_id: str
     estimated_income: int
     balance_upon_receival: int
+    timestamp: datetime = Field(default_factory=datetime.now)
     id: str = Field(default_factory=lambda: uuid4().hex)
 
 
@@ -47,10 +48,18 @@ class Reward(BaseModel):
     id: str = Field(default_factory=lambda: uuid4().hex)
 
 
+class RewardList(GenericResponse):
+    rewards: tp.List[Reward]
+
+
+class AchievementTemplateList(GenericResponse):
+    achievement_templates: tp.List[AchievementTemplate]
+
+
 class RewardEvent(BaseModel):
     """Reward event descriptor"""
 
     reward_id: str
     user_id: str
-    timestamp: datetime
+    timestamp: datetime = Field(default_factory=datetime.now)
     id: str = Field(default_factory=lambda: uuid4().hex)

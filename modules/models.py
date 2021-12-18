@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import typing as tp
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class GenericResponse(BaseModel):
@@ -20,7 +20,7 @@ class UserWithPassword(User):
 
 
 class TokenData(BaseModel):
-    username: tp.Optional[str] = None
+    username: str
 
 
 class Token(BaseModel):

@@ -2,7 +2,8 @@ import os
 import typing as tp
 from datetime import datetime, timedelta
 
-from fastapi import Depends
+from pydantic import parse_obj_as
+from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -61,8 +62,13 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
         token_data = TokenData(username=username)
     except JWTError:
         raise CredentialsValidationException
-    user: tp.Optional[UserWithPassword] = await MongoDbWrapper().get_user_by_isu_id(token_data.username)
-    if user is None:
-        raise CredentialsValidationException
-    logger.info(f"user: {dict(user)}")
-    return User(**dict(user))
+
+    try:
+        user: UserWithPassword = await MongoDbWrapper().get_user_by_isu_id(token_data.username)
+    except Exception as e:
+        raise HTTPException(404, str(e))
+
+    user_dict = user.dict(exclude={"hashed_password"})
+    logger.info(f"user: {user_dict}")
+
+    return parse_obj_as(User, user_dict)

@@ -154,6 +154,10 @@ class MongoDbWrapper(metaclass=SingletonMeta):
             {"is_teacher": False, "group": group},
         )
 
+    async def update_user_data(self, user: User) -> None:
+        """update user db entry with new data"""
+        await self._update_document_in_collection(self._users_collection, "isu_id", user.isu_id, user)
+
     async def add_achievement(self, achievement: AchievementTemplate) -> None:
         """upload Achievement to database"""
         return await self._insert_document(self._achievements_collection, achievement)
@@ -161,6 +165,12 @@ class MongoDbWrapper(metaclass=SingletonMeta):
     async def get_all_achievements(self) -> tp.List[AchievementTemplate]:
         """get all available achievement templates"""
         return await self._get_all_from_collection(self._achievements_collection, AchievementTemplate)
+
+    async def get_achievement_template_by_id(self, achievement_template_id: str) -> AchievementTemplate:
+        """get concrete achievement template by its ID"""
+        return await self._get_element_by_key(
+            self._achievements_collection, "id", achievement_template_id, AchievementTemplate
+        )
 
     async def add_achievement_event(self, achievement: AchievementEvent) -> None:
         """upload Achievement event to database"""
@@ -193,6 +203,10 @@ class MongoDbWrapper(metaclass=SingletonMeta):
     async def get_all_rewards(self) -> tp.List[Reward]:
         """get all available rewards"""
         return await self._get_all_from_collection(self._rewards_collection, Reward)
+
+    async def get_reward_by_id(self, reward_id: str) -> Reward:
+        """get all available rewards"""
+        return await self._get_element_by_key(self._rewards_collection, "id", reward_id, Reward)
 
     async def add_reward_event(self, reward_event: RewardEvent) -> None:
         """upload reward-event to database"""
