@@ -5,4 +5,7 @@ services:
       dockerfile: Dockerfile
       context: .
     ports:
-      - "5002:8000"
+      - "5000:8000"
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"

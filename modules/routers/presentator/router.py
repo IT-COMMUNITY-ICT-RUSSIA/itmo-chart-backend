@@ -55,7 +55,7 @@ async def get_leaderboard(
         return Chart(
             status_code=status.HTTP_200_OK,
             detail=f"Success gathering chart of {len(chart_data)} rows.)",
-            chart_data=chart_data,
+            chart_data=chart_data[:100],
         )
 
     except KeyError as e:

@@ -98,6 +98,9 @@ async def add_user_achievement(
 ) -> GenericResponse:
     """Add new achievement, associated with concrete user"""
     try:
+        if not (teacher.is_teacher and "write" in teacher.permissions):
+            return GenericResponse(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions")
+
         student.points += achievement.value
         student.coins += math.ceil(achievement.value * 0.2)
         await DB.update_user_data(student)
