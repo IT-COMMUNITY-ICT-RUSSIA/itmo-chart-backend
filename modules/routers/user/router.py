@@ -19,14 +19,7 @@ from ...security import (
 user_router = APIRouter(prefix="/user", tags=["user"], default_response_class=GenericResponse)
 
 
-<<<<<<< HEAD
-user_router = APIRouter(prefix="/user")
-
-
-@user_router.post("/login")
-=======
 @user_router.post("/login", response_model=Token)
->>>>>>> f89bb95 (:zap: user router fixed)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()) -> Token:
     """
     log the user in provided the username
