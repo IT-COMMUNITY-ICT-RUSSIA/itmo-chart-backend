@@ -10,15 +10,6 @@ class GenericResponse(BaseModel):
     detail: tp.Optional[str] = "Successful"
 
 
-class User(BaseModel):
-    username: str
-    is_admin: bool = False
-
-
-class UserWithPassword(User):
-    hashed_password: str
-
-
 class TokenData(BaseModel):
     username: str
 
