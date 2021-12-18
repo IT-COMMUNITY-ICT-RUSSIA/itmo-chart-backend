@@ -2,7 +2,7 @@ import typing as tp
 
 from datetime import timedelta
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 from loguru import logger
 
@@ -43,8 +43,10 @@ async def get_user_data(user: User = Depends(get_current_user)) -> UserOut:
 
 
 @user_router.get("/users", response_model=tp.Union[UsersOut, GenericResponse])  # type: ignore
-async def get_all_users(user: User = Depends(get_current_user)) -> UsersOut:
+async def get_all_users(user: User = Depends(get_current_user)) -> tp.Union[UsersOut, GenericResponse]:
     """get all known users"""
+    if not (user.is_teacher and "write" in user.permissions):
+        return GenericResponse(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions")
     users = await MongoDbWrapper().get_all_users()
     return UsersOut(users=users)
 
