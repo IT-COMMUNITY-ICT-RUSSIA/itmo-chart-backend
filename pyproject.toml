@@ -9,10 +9,19 @@ license = "Apache 2"
 python = "^3.9"
 fastapi = "^0.70.1"
 motor = "^2.5.1"
+uvicorn = "^0.16.0"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+loguru = "^0.5.3"
+python-dotenv = "^0.19.2"
+dnspython = "^2.1.0"
+python-multipart = "^0.0.5"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.920"
 black = "^21.12b0"
+Faker = "^10.0.0"
+flake8 = "^4.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
