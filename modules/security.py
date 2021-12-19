@@ -16,7 +16,7 @@ from .exceptions import CredentialsValidationException
 from .models import TokenData
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+ACCESS_TOKEN_EXPIRE_MINUTES = 600
 ALGORITHM = "HS256"
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="user/login")
