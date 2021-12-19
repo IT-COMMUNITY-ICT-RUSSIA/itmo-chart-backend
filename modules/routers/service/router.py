@@ -90,7 +90,7 @@ async def get_achievement_templates() -> tp.Union[AchievementTemplateList, Gener
         )
 
 
-@service_router.post("/achievements", response_model=GenericResponse)
+@service_router.get("/achievements/add", response_model=GenericResponse)
 async def add_user_achievement(
     achievement: AchievementTemplate = Depends(get_achievement_template),
     student: User = Depends(get_user_by_id),
