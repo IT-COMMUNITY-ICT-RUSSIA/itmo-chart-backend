@@ -1,3 +1,4 @@
+import math
 import typing as tp
 
 from datetime import timedelta
@@ -10,7 +11,7 @@ from modules.database import MongoDbWrapper
 
 from ...exceptions import AuthException
 from ...models import GenericResponse, Token
-from ...routers.user.models import AchievementsOut, User, UserOut, UsersOut, PurchasesOut
+from ...routers.user.models import AchievementsOut, User, UserOut, UsersOut, PurchasesOut, AchievementEventOut
 from ...security import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     authenticate_user,
@@ -52,10 +53,30 @@ async def get_all_users(user: User = Depends(get_current_user)) -> tp.Union[User
 
 
 @user_router.get("/achievements", response_model=tp.Union[AchievementsOut, GenericResponse])  # type: ignore
-async def get_user_achievements(user: User = Depends(get_current_user)) -> AchievementsOut:
+async def get_user_achievements(student: User = Depends(get_current_user)) -> AchievementsOut:
     """return achievement data for the requested user"""
-    achievements = await MongoDbWrapper().get_all_recieved_achievements_for_user(user=user)
-    return AchievementsOut(achievements=achievements)
+    try:
+        achievements = await MongoDbWrapper().get_all_recieved_achievements_for_user(student)
+        achievement_cards = []
+
+        for event in achievements:
+            logger.info(event.dict())
+            achievement_template = await MongoDbWrapper().get_achievement_template_by_id(event.achievement_id)
+            teacher = await MongoDbWrapper().get_user_by_isu_id(event.creator_id)
+            card = AchievementEventOut(
+                title=achievement_template.name,
+                description=achievement_template.type,
+                teacher_name=teacher.name,
+                student_name=student.name,
+                points_income=event.estimated_income,
+                coins_income=math.ceil(event.estimated_income * 0.2),
+            )
+            achievement_cards.append(card)
+    except KeyError as e:
+        logger.error(str(e))
+        achievement_cards = []
+
+    return AchievementsOut(achievements=achievement_cards)
 
 
 @user_router.get("/purchase-history", response_model=PurchasesOut)
