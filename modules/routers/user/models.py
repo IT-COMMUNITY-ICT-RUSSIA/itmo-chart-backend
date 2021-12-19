@@ -4,7 +4,6 @@ from datetime import datetime
 from pydantic import BaseModel
 
 from modules.models import GenericResponse
-from modules.routers.service.models import RewardEvent
 
 
 class User(BaseModel):
@@ -49,5 +48,15 @@ class AchievementsOut(GenericResponse):
     achievements: tp.List[AchievementEventOut]
 
 
+class RewardEventOut(BaseModel):
+    """Reward event descriptor"""
+
+    title: str
+    thumbnail: str
+    price: int
+    timestamp: datetime
+    buyer_name: str
+
+
 class PurchasesOut(GenericResponse):
-    purchases: tp.List[RewardEvent]
+    purchases: tp.List[RewardEventOut]

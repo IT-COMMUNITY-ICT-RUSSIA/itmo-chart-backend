@@ -11,7 +11,8 @@ from modules.database import MongoDbWrapper
 
 from ...exceptions import AuthException
 from ...models import GenericResponse, Token
-from ...routers.user.models import AchievementsOut, User, UserOut, UsersOut, PurchasesOut, AchievementEventOut
+from ...routers.user.models import AchievementsOut, RewardEventOut, User, UserOut, UsersOut, PurchasesOut, \
+    AchievementEventOut
 from ...security import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     authenticate_user,
@@ -60,7 +61,6 @@ async def get_user_achievements(student: User = Depends(get_current_user)) -> Ac
         achievement_cards = []
 
         for event in achievements:
-            logger.info(event.dict())
             achievement_template = await MongoDbWrapper().get_achievement_template_by_id(event.achievement_id)
             teacher = await MongoDbWrapper().get_user_by_isu_id(event.creator_id)
             card = AchievementEventOut(
@@ -82,5 +82,21 @@ async def get_user_achievements(student: User = Depends(get_current_user)) -> Ac
 @user_router.get("/purchase-history", response_model=PurchasesOut)
 async def get_user_achievements(user: User = Depends(get_current_user)) -> PurchasesOut:
     """return purchase data for the requested user"""
-    rewards = await MongoDbWrapper().get_all_reward_events_for_user(user=user)
-    return PurchasesOut(purchases=rewards)
+    try:
+        rewards = await MongoDbWrapper().get_all_reward_events_for_user(user=user)
+    except KeyError:
+        rewards = []
+
+    reward_cards = []
+    for event in rewards:
+        reward_template = await MongoDbWrapper().get_reward_by_id(event.reward_id)
+        card = RewardEventOut(
+            title=reward_template.name,
+            thumbnail=reward_template.thumbnail,
+            price=reward_template.price,
+            timestamp=event.timestamp,
+            buyer_name=user.name,
+        )
+        reward_cards.append(card)
+
+    return PurchasesOut(purchases=reward_cards)
