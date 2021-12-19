@@ -34,7 +34,7 @@ async def get_available_rewards() -> tp.Union[RewardList, GenericResponse]:
         )
 
 
-@service_router.post("/checkout", response_model=GenericResponse)
+@service_router.get("/checkout", response_model=GenericResponse)
 async def purchase_reward(reward_id: str, user: User = Depends(get_current_user)) -> GenericResponse:
     """Purchase reward, change user's balance"""
     try:
